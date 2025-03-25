@@ -8,10 +8,19 @@ def home():
     return jsonify({"message": "Stock API is running! Use /stock/<symbol> to fetch stock prices."})
 
 def fetch_stock_price(symbol):
-    url = f"https://query1.finance.yahoo.com/v7/finance/quote?symbols={symbol}"
-    response = requests.get(url)
-    data = response.json()
-    return data["quoteResponse"]["result"][0]["regularMarketPrice"]
+    try:
+        url = f"https://query1.finance.yahoo.com/v7/finance/quote?symbols={symbol}"
+        response = requests.get(url)
+        data = response.json()
+        print(f"✅ API Response: {data}")  # Debugging
+        if "quoteResponse" in data and data["quoteResponse"]["result"]:
+            return data["quoteResponse"]["result"][0]["regularMarketPrice"]
+        else:
+            raise Exception("Invalid response structure from Yahoo Finance")
+    except Exception as e:
+        print(f"❌ Error fetching stock data for {symbol}: {e}")
+        raise
+
 
 @app.route("/stock/<symbol>")
 def get_stock(symbol):

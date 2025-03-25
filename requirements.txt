@@ -1,4 +1,4 @@
-Flask
-requests
+flask
 gunicorn
-    
+yfinance
+requests
